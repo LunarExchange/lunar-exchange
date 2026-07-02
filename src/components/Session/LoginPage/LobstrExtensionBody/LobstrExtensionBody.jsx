@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { isConnected } from '@lobstrco/signer-extension-api';
+import { isConnected } from '../../../../lib/helpers/LobstrExtensionApi';
 import images from '../../../../images';
 import HiddenDescription from '../Common/HiddenDescription';
 import SecretPhrase from '../SecretPhrase/SecretPhrase';

@@ -5,7 +5,7 @@ import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import AppStellar from '@ledgerhq/hw-app-str';
 import TrezorConnect from '@trezor/connect-web';
 import { getPublicKey } from '@stellar/freighter-api';
-import { getPublicKey as getPublicKeyFromLobstr } from '@lobstrco/signer-extension-api';
+import { getPublicKey as getPublicKeyFromLobstr } from '../helpers/LobstrExtensionApi';
 import FastAverageColor from 'fast-average-color';
 import isElectron from 'is-electron';
 import directory from 'stellarterm-directory';
