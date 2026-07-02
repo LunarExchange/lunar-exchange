@@ -1,8 +1,11 @@
 # 🌙 Lunar Exchange
 
-[![CI/CD](https://github.com/lunarexchange/lunar-exchange/workflows/CI/badge.svg)](https://github.com/lunarexchange/lunar-exchange/actions)
+[![Complete CI](https://github.com/LunarExchange/lunar-exchange/actions/workflows/complete-ci.yml/badge.svg)](https://github.com/LunarExchange/lunar-exchange/actions/workflows/complete-ci.yml)
+[![Frontend CI](https://github.com/LunarExchange/lunar-exchange/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/LunarExchange/lunar-exchange/actions/workflows/frontend-ci.yml)
+[![Deployment](https://github.com/LunarExchange/lunar-exchange/actions/workflows/full-deployment.yml/badge.svg)](https://github.com/LunarExchange/lunar-exchange/actions/workflows/full-deployment.yml)
+[![Monitoring](https://github.com/LunarExchange/lunar-exchange/actions/workflows/monitoring.yml/badge.svg)](https://github.com/LunarExchange/lunar-exchange/actions/workflows/monitoring.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Node Version](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org)
+[![Node Version](https://img.shields.io/badge/node-%3E%3D24-brightgreen)](https://nodejs.org)
 [![Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/lunarexchange/lunar-exchange)
 
 > **A modern, secure, and intuitive trading platform for the Stellar blockchain network**
