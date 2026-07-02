@@ -23,8 +23,8 @@
     "stellar-network"
   ],
   "engines": {
-    "node": ">=20",
-    "npm": ">=9"
+    "node": ">=24",
+    "npm": ">=10"
   },
   "scripts": {
     "setup": "npm install",
