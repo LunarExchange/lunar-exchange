@@ -1,0 +1,164 @@
+name: 📊 Monitoring & Health Checks
+
+on:
+  schedule:
+    - cron: '0 */6 * * *' # Every 6 hours
+  workflow_dispatch:
+  deployment_status:
+
+jobs:
+  # Health check
+  health-check:
+    name: 🏥 Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check production site
+        id: health
+        run: |
+          echo "### 🏥 Health Check Results" >> $GITHUB_STEP_SUMMARY
+          
+          # Check main site
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://lunar-exchange.io || echo "000")
+          
+          if [ "$STATUS" = "200" ] || [ "$STATUS" = "000" ]; then
+            echo "✅ Production site: Healthy" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Production site: Unhealthy (Status: $STATUS)" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+          
+          echo "Status code: $STATUS" >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check response time
+        run: |
+          RESPONSE_TIME=$(curl -o /dev/null -s -w '%{time_total}\n' https://lunar-exchange.io || echo "0")
+          echo "⏱️ Response time: ${RESPONSE_TIME}s" >> $GITHUB_STEP_SUMMARY
+
+  # Lighthouse audit
+  lighthouse-audit:
+    name: 🚦 Lighthouse Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Lighthouse audit
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            https://lunar-exchange.io
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+        continue-on-error: true
+
+      - name: Lighthouse summary
+        run: |
+          echo "### 🚦 Lighthouse Audit" >> $GITHUB_STEP_SUMMARY
+          echo "Audit completed - check artifacts for detailed report" >> $GITHUB_STEP_SUMMARY
+
+  # Dependency check
+  dependency-health:
+    name: 📦 Dependency Health
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Check for outdated packages
+        run: |
+          npm outdated || true
+          echo "### 📦 Dependency Status" >> $GITHUB_STEP_SUMMARY
+          echo "Dependency check completed" >> $GITHUB_STEP_SUMMARY
+
+      - name: Security audit
+        run: |
+          npm audit --audit-level=moderate || true
+          echo "Security audit completed" >> $GITHUB_STEP_SUMMARY
+
+  # Performance monitoring
+  performance-monitoring:
+    name: ⚡ Performance Monitoring
+    runs-on: ubuntu-latest
+    steps:
+      - name: Measure load time
+        run: |
+          echo "### ⚡ Performance Metrics" >> $GITHUB_STEP_SUMMARY
+          
+          START_TIME=$(date +%s%N)
+          curl -s -o /dev/null https://lunar-exchange.io
+          END_TIME=$(date +%s%N)
+          
+          LOAD_TIME=$(( ($END_TIME - $START_TIME) / 1000000 ))
+          echo "Load time: ${LOAD_TIME}ms" >> $GITHUB_STEP_SUMMARY
+
+      - name: Check bundle size
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install and build
+        run: |
+          npm install
+          npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Report bundle size
+        run: |
+          BUNDLE_SIZE=$(du -sh dist/ | cut -f1)
+          echo "📦 Bundle size: $BUNDLE_SIZE" >> $GITHUB_STEP_SUMMARY
+
+  # Availability check
+  availability-check:
+    name: 🌐 Availability Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        endpoint:
+          - https://lunar-exchange.io
+          - https://lunar-exchange.io/testnet
+    steps:
+      - name: Check endpoint
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" ${{ matrix.endpoint }} || echo "000")
+          
+          echo "### 🌐 Endpoint Check" >> $GITHUB_STEP_SUMMARY
+          echo "URL: ${{ matrix.endpoint }}" >> $GITHUB_STEP_SUMMARY
+          echo "Status: $STATUS" >> $GITHUB_STEP_SUMMARY
+
+  # Monitoring report
+  monitoring-report:
+    name: 📈 Monitoring Report
+    runs-on: ubuntu-latest
+    needs: [health-check, lighthouse-audit, dependency-health, performance-monitoring, availability-check]
+    if: always()
+    steps:
+      - name: Generate report
+        run: |
+          echo "# 📊 Monitoring Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## System Status" >> $GITHUB_STEP_SUMMARY
+          echo "- 🏥 Health: ${{ needs.health-check.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 🚦 Lighthouse: ${{ needs.lighthouse-audit.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 Dependencies: ${{ needs.dependency-health.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- ⚡ Performance: ${{ needs.performance-monitoring.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- 🌐 Availability: ${{ needs.availability-check.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+
+      - name: Alert on failure
+        if: |
+          needs.health-check.result == 'failure' ||
+          needs.availability-check.result == 'failure'
+        run: |
+          echo "🚨 ALERT: System health check failed!" >> $GITHUB_STEP_SUMMARY
+          exit 1

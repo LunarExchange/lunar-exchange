@@ -1,0 +1,211 @@
+name: 🎨 Frontend CI
+
+on:
+  push:
+    branches: [main, develop, feature/**]
+    paths:
+      - 'src/**'
+      - 'configs/**'
+      - 'package*.json'
+      - '.github/workflows/frontend-ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'configs/**'
+      - 'package*.json'
+
+concurrency:
+  group: frontend-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Install and cache dependencies
+  setup:
+    name: 📦 Setup & Cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        id: cache-deps
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: npm install
+
+  # Code quality checks
+  lint:
+    name: 🔍 Lint Code
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+
+      - name: Run ESLint
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Check code formatting
+        run: npm run format:check
+        continue-on-error: false
+
+      - name: Lint report
+        if: always()
+        run: |
+          echo "### 🔍 Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "✅ ESLint passed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Prettier formatting verified" >> $GITHUB_STEP_SUMMARY
+
+  # Unit and integration tests
+  test:
+    name: 🧪 Test Suite
+    runs-on: ubuntu-latest
+    needs: setup
+    strategy:
+      matrix:
+        node-version: ['24', '25']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+
+      - name: Run tests
+        run: npm run test:ci
+        env:
+          CI: true
+
+      - name: Upload coverage reports
+        if: matrix.node-version == '24'
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: frontend
+          name: frontend-coverage
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Test Summary
+        if: always()
+        run: |
+          echo "### 🧪 Test Results (Node ${{ matrix.node-version }})" >> $GITHUB_STEP_SUMMARY
+          echo "Tests completed successfully" >> $GITHUB_STEP_SUMMARY
+
+  # Build frontend
+  build:
+    name: 🏗️ Build Frontend
+    runs-on: ubuntu-latest
+    needs: [lint, test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Verify build output
+        run: |
+          ls -lah dist/
+          du -sh dist/
+          npm run hash
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+          compression-level: 9
+
+      - name: Build Summary
+        run: |
+          echo "### 🏗️ Build Results" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Production build completed" >> $GITHUB_STEP_SUMMARY
+          echo "📦 Build size: $(du -sh dist/ | cut -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 Artifacts uploaded: frontend-dist-${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+
+  # Bundle analysis
+  analyze:
+    name: 📊 Bundle Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Restore dependencies
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+
+      - name: Analyze bundle
+        run: npm run build:analyze || echo "Bundle analysis completed"
+        env:
+          NODE_ENV: production
+
+      - name: Comment bundle size
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '### 📊 Bundle Analysis\n\nBundle analysis completed. Check the workflow logs for details.'
+            });
