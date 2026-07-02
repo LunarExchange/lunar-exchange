@@ -41,7 +41,7 @@ jobs:
         run: npm run hash
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
@@ -50,7 +50,7 @@ jobs:
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             dist/index.html
@@ -59,34 +59,34 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Notify deployment success
+      - name: Deployment Summary
         if: success()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: custom
-          custom_payload: |
-            {
-              text: '✅ Lunar Exchange deployed successfully to production',
-              attachments: [{
-                color: 'good',
-                text: `Commit: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}`
-              }]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          echo "### ✅ Deployment Successful! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://lunar-exchange.io" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Author:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Message:** ${{ github.event.head_commit.message }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Notify deployment failure
-        if: failure()
-        uses: 8398a7/action-slack@v3
+      - name: Notify Slack (Optional)
+        if: success() && secrets.SLACK_WEBHOOK != ''
+        uses: slackapi/slack-github-action@v1.26.0
         with:
-          status: custom
-          custom_payload: |
+          payload: |
             {
-              text: '❌ Lunar Exchange deployment failed',
-              attachments: [{
-                color: 'danger',
-                text: `Commit: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}`
-              }]
+              "text": "✅ Lunar Exchange deployed successfully to production",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Deployment Status:* Success ✅\n*Environment:* Production\n*Commit:* ${{ github.event.head_commit.message }}\n*Author:* ${{ github.actor }}"
+                  }
+                }
+              ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
