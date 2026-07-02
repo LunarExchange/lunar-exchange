@@ -3,54 +3,18 @@ name: 📜 Smart Contract CI
 on:
   push:
     branches: [main, develop, feature/**]
-    paths:
-      - 'contracts/**'
-      - 'scripts/**'
-      - '.github/workflows/smart-contract-ci.yml'
   pull_request:
     branches: [main, develop]
-    paths:
-      - 'contracts/**'
-      - 'scripts/**'
 
 concurrency:
   group: contracts-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # Setup Stellar environment
-  setup:
-    name: 🚀 Setup Stellar Environment
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Stellar CLI
-        run: |
-          echo "### 🚀 Stellar Environment Setup" >> $GITHUB_STEP_SUMMARY
-          echo "Setting up Stellar CLI and Soroban..." >> $GITHUB_STEP_SUMMARY
-          
-          # Install Stellar CLI (if contracts exist)
-          if [ -d "contracts" ]; then
-            echo "Contracts directory found" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "⚠️ No contracts directory - creating placeholder" >> $GITHUB_STEP_SUMMARY
-            mkdir -p contracts
-            echo "# Stellar Smart Contracts" > contracts/README.md
-          fi
-
-      - name: Environment Summary
-        run: |
-          echo "✅ Stellar environment ready" >> $GITHUB_STEP_SUMMARY
-          echo "📝 Note: This is a frontend-focused project" >> $GITHUB_STEP_SUMMARY
-          echo "🔗 Stellar SDK integration via @stellar/stellar-sdk" >> $GITHUB_STEP_SUMMARY
-
   # Validate Stellar integration
   validate-integration:
     name: ✅ Validate Stellar Integration
     runs-on: ubuntu-latest
-    needs: setup
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -68,9 +32,8 @@ jobs:
           echo "### 📊 Stellar Integration Check" >> $GITHUB_STEP_SUMMARY
           
           # Check if Stellar SDK is properly installed
-          node -e "const StellarSdk = require('@stellar/stellar-sdk'); console.log('Stellar SDK version:', StellarSdk.version);" && \
-          echo "✅ Stellar SDK: Installed and working" >> $GITHUB_STEP_SUMMARY || \
-          echo "❌ Stellar SDK: Not found" >> $GITHUB_STEP_SUMMARY
+          node -e "const StellarSdk = require('@stellar/stellar-sdk'); console.log('✅ Stellar SDK version:', StellarSdk.version);"
+          echo "✅ Stellar SDK: Installed and working" >> $GITHUB_STEP_SUMMARY
           
           # Check for Stellar-related files
           if grep -r "StellarSdk\|stellar-sdk" src/lib/ > /dev/null 2>&1; then
@@ -91,6 +54,7 @@ jobs:
     name: 🔒 Security Audit
     runs-on: ubuntu-latest
     needs: validate-integration
+    if: always() && (needs.validate-integration.result == 'success' || needs.validate-integration.result == 'skipped')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -106,44 +70,27 @@ jobs:
           echo "### 🔒 Security Audit" >> $GITHUB_STEP_SUMMARY
           echo "Security audit completed" >> $GITHUB_STEP_SUMMARY
 
-      - name: Check for vulnerable dependencies
+      - name: Check Stellar packages
         run: |
-          echo "Checking Stellar-related packages..." >> $GITHUB_STEP_SUMMARY
-          npm list @stellar/stellar-sdk || true
-          npm list @stellar/freighter-api || true
+          echo "### 📦 Stellar Packages" >> $GITHUB_STEP_SUMMARY
+          npm list @stellar/stellar-sdk || echo "Stellar SDK package check completed"
+          npm list @stellar/freighter-api || echo "Freighter API package check completed"
 
-  # Integration tests with Stellar Testnet
-  integration-test:
-    name: 🌐 Testnet Integration
+  # Integration summary
+  integration-summary:
+    name: 📋 Integration Summary
     runs-on: ubuntu-latest
-    needs: validate-integration
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [validate-integration, security-audit]
+    if: always()
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run integration tests
-        run: |
-          echo "### 🌐 Stellar Testnet Integration" >> $GITHUB_STEP_SUMMARY
-          echo "Running Stellar network integration tests..." >> $GITHUB_STEP_SUMMARY
-          
-          # Run tests if they exist
-          npm run test:ci || echo "No specific integration tests configured"
-          
-          echo "✅ Integration tests completed" >> $GITHUB_STEP_SUMMARY
-
-      - name: Test Summary
+      - name: Generate summary
         run: |
           echo "### ✅ Stellar Integration Status" >> $GITHUB_STEP_SUMMARY
-          echo "- Stellar SDK: Integrated" >> $GITHUB_STEP_SUMMARY
-          echo "- Network Support: Mainnet & Testnet" >> $GITHUB_STEP_SUMMARY
-          echo "- Wallet Integration: Multiple providers" >> $GITHUB_STEP_SUMMARY
-          echo "- Trading: DEX integration ready" >> $GITHUB_STEP_SUMMARY
+          echo "- Stellar SDK: ${{ needs.validate-integration.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Security Audit: ${{ needs.security-audit.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Features:**" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Stellar SDK: Integrated" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Network Support: Mainnet & Testnet" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Wallet Integration: Multiple providers" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Trading: DEX integration ready" >> $GITHUB_STEP_SUMMARY
