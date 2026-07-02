@@ -1,0 +1,69 @@
+@import './AssetDropDown/AssetDropDown';
+
+.AssetPairRow {
+    border-top: 1px solid $s-color-neutral7;
+    padding: 0.75em 18px;
+    text-decoration: none;
+    display: block;
+}
+
+.AssetPair {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.AssetPair__separator {
+    width: 18px;
+    height: 18px;
+    border-top: 1px solid $s-color-neutral7;
+    border-bottom: 1px solid $s-color-neutral7;
+}
+
+.AssetPair__card {
+    flex: 1 0;
+}
+
+a.AssetPairRow:hover .AssetPair__separator {
+    border-top: 1px solid $s-color-primary4;
+    border-bottom: 1px solid $s-color-primary4;
+}
+
+.AssetPair_error {
+    color: $s-color-alert;
+    font-size: $s-scale-4;
+    padding: 15px 0 20px;
+    text-align: center;
+}
+
+.AssetPair_fullscreen {
+    position: fixed;
+    z-index: 10;
+    top: 10px;
+    right: 18px;
+
+    .AssetCardList_empty {
+        margin-left: 15px;
+    }
+
+    .AssetPair__card {
+        flex: 1 0 auto;
+        width: 265px;
+
+        .AssetCard2__logo {
+            margin-right: 3px;
+        }
+
+        .AssetDropDown__search {
+            width: 100%;
+        }
+
+        .AssetDropDown__arrowUp {
+            z-index: 5;
+        }
+
+        .AssetDropDown__empty {
+            padding: 0 10px;
+        }
+    }
+}

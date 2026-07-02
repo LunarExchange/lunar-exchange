@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- Primary Meta Tags -->
+    <title>Lunar Exchange - Modern Stellar Trading Platform</title>
+    <meta name="title" content="Lunar Exchange - Modern Stellar Trading Platform">
+    <meta name="description" content="Trade on the Stellar blockchain with Lunar Exchange. Secure, fast, and intuitive decentralized exchange for digital assets.">
+    <meta name="keywords" content="stellar, blockchain, cryptocurrency, trading, exchange, dex, stellar network, lumens, XLM">
+    <meta name="author" content="Lunar Exchange Organization">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lunar-exchange.io/">
+    <meta property="og:title" content="Lunar Exchange - Modern Stellar Trading Platform">
+    <meta property="og:description" content="Trade on the Stellar blockchain with Lunar Exchange. Secure, fast, and intuitive decentralized exchange for digital assets.">
+    <meta property="og:image" content="https://lunar-exchange.io/static/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://lunar-exchange.io/">
+    <meta property="twitter:title" content="Lunar Exchange - Modern Stellar Trading Platform">
+    <meta property="twitter:description" content="Trade on the Stellar blockchain with Lunar Exchange. Secure, fast, and intuitive decentralized exchange for digital assets.">
+    <meta property="twitter:image" content="https://lunar-exchange.io/static/twitter-image.png">
+    
+    <!-- Security -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        img-src 'self' data: https: http:;
+        font-src 'self' data: https://fonts.gstatic.com;
+        connect-src 'self' https://horizon.stellar.org https://horizon-testnet.stellar.org wss:;
+        frame-src 'self' https:;
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+        frame-ancestors 'none';
+        upgrade-insecure-requests;
+    ">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="manifest" href="/static/site.webmanifest">
+    <meta name="theme-color" content="#1a1a2e">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://horizon.stellar.org">
+    <link rel="dns-prefetch" href="https://horizon.stellar.org">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/static/manifest.json">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Lunar Exchange",
+        "url": "https://lunar-exchange.io",
+        "description": "Modern Stellar Network Trading Platform",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+</head>
+<body>
+    <noscript>
+        <div style="text-align: center; padding: 50px; font-family: sans-serif;">
+            <h1>🌙 Lunar Exchange</h1>
+            <p style="color: #666; font-size: 18px;">
+                JavaScript is required to run Lunar Exchange.
+            </p>
+            <p style="color: #999;">
+                Please enable JavaScript in your browser settings to continue.
+            </p>
+        </div>
+    </noscript>
+    
+    <div id="app"></div>
+    
+    <!-- Analytics (production only) -->
+    <% if (process.env.NODE_ENV === 'production') { %>
+    <!-- Add your analytics script here -->
+    <% } %>
+</body>
+</html>

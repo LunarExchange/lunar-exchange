@@ -1,0 +1,70 @@
+// Modifier classes are supposed to use -- and not __
+// The __ is just here to support code that used the wrong separator
+
+.s-button,
+.s-btn_cancel {
+    z-index: 1;
+    text-decoration: none;
+    user-select: none;
+    outline: none;
+}
+
+.s-button {
+    padding: $so-inputPadding;
+    border: 1px solid #5eb464; // A mixture between primary3 and primary4
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    background: $s-color-primary4;
+    color: $s-color-neutral9;
+}
+
+.s-button:hover {
+    z-index: 2;
+    border: 1px solid $s-color-primary2;
+    background: $s-color-primary3;
+    color: $s-color-neutral9;
+}
+
+.s-button:active,
+.s-button.is-active,
+:checked + .s-button {
+    z-index: 3;
+    border: 1px solid $s-color-primary1;
+    background: $s-color-primary2;
+    box-shadow: none;
+    color: $s-color-neutral9;
+}
+
+.s-btn_cancel {
+    font-weight: lighter;
+    border: solid 1px #dfe0e1;
+    color: #505558;
+}
+
+.s-btn_cancel:hover {
+    border: solid 1px #b9b9b9;
+    z-index: 1;
+}
+
+.s-btn_cancel:active,
+.s-btn_cancel.is-active,
+:checked + .s-btn_cancel {
+    border: solid 1px #9a9a9a;
+    z-index: 2;
+}
+
+.btn_cancel.is-disabled,
+.btn_cancel:disabled,
+.btn_cancel[disabled],
+.s-button.is-disabled,
+.s-button:disabled,
+.s-button[disabled] {
+    opacity: 0.5;
+    box-shadow: none;
+}
+
+:checked:focus + .s-button,
+:checked:focus + .s-btn_cancel {
+    // TODO: figure out focus outline
+    outline: auto 5px -webkit-focus-ring-color;
+}

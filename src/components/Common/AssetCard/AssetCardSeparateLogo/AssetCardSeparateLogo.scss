@@ -1,0 +1,75 @@
+.AssetCardSeparateLogo{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+
+    .AssetCardSeparateLogo_logo{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .AssetCardSeparateLogo_details{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-weight: 300;
+        width: 80%;
+
+        .AssetCardSeparateLogo_details-row{
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+
+            .AssetCardSeparateLogo_code {
+                font-weight: normal;
+                margin-right: 3px;
+            }
+
+            &.inColumn{
+                flex-direction: column;
+                line-height: normal;
+
+                .AssetCardSeparateLogo_code{
+                    font-size: 14px;
+                    line-height: 16px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+
+                .AssetCardSeparateLogo_domain {
+                    font-size: 12px;
+                    line-height: 14px;
+                    color: #9aa6ac99;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+
+                    &:hover{
+                        overflow: unset;
+                        background-color: #fff;
+                        z-index: 2;
+                    }
+                }
+            }
+
+            &.inRow{
+                flex-direction: row;
+                align-items: center;
+
+                .AssetCardSeparateLogo_code{
+                    margin-left: 7px;
+                }
+
+                .AssetCardSeparateLogo_domain {
+                    margin-left: 6px;
+                }
+            }
+        }
+        .AssetCardSeparateLogo_issuer {
+            opacity: 0.5;
+        }
+    }
+}

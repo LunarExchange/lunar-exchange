@@ -1,0 +1,317 @@
+@import "PreferredHorizon/PreferredHorizon";
+
+.Header_main {
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+    .Header_network {
+        background: $s-color-primary7;
+        padding: 8px 0;
+
+        .Network_bar {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .Header_background {
+        background: #fff;
+        position: relative;
+
+        .Header {
+            display: flex;
+            align-items: center;
+            padding: 18px 0 21px;
+
+            .Header_settings {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 32px;
+                width: 32px;
+                border-radius: 8px;
+                background: #F7F9FA;
+                margin-left: 15px;
+                cursor: pointer;
+                position: relative;
+
+                .Header_settings_menu {
+                    display: flex;
+                    position: absolute;
+                    top: calc(100% - 16px);
+                    right: 0;
+                    width: 300px;
+                    padding-top: 30px;
+                }
+
+                .Header_settings_icon--hover {
+                    display: none;
+                }
+
+                &:hover {
+                    background: #7ED085;
+
+                    .Header_settings_icon {
+                        display: none;
+
+                        &--hover {
+                            display: block;
+                        }
+                    }
+                }
+            }
+
+            &:after {
+                display: none;
+            }
+
+            .Header_nav {
+                display: flex;
+                align-items: baseline;
+                position: relative;
+
+                a {
+                    margin-right: 36px;
+                    text-decoration: none;
+                }
+
+                .Nav_logo {
+                    font-weight: bold;
+                    color: $s-color-primary4;
+                    font-size: $s-scale-2;
+                }
+
+                .Nav_link {
+                    padding: 4px 10px;
+                    margin-right: 16px;
+                    border-radius: 3px;
+                    white-space: nowrap;
+                }
+
+                .Nav_link.is-current {
+                    background: $s-color-neutral8;
+                }
+
+                .Nav_link:hover {
+                    background: $s-color-primary4;
+                    color: #fff;
+                }
+
+                .buy_crypto {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    position: relative;
+                    cursor: pointer;
+
+                    .cards_logo {
+                        margin-left: 0.5em;
+                        height: 15px;
+                        width: 52px;
+                    }
+
+                    .buy_crypto-links {
+                        display: none;
+                        position: absolute;
+                        left: 0;
+                        top: 100%;
+                        width: 100%;
+                        background-color: #fff;
+                        z-index: 11;
+                        flex-direction: column;
+                        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+                    }
+
+                    .buy_crypto-link {
+                        padding: 12px 22px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        font-weight: normal;
+                        color: #324351;
+                        width: 100%;
+
+                        &:hover {
+                            background-color: #eee;
+                        }
+                    }
+
+                    &:hover {
+                        .buy_crypto-links {
+                            display: flex;
+                        }
+                    }
+                }
+            }
+
+            .Header_login {
+                display: flex;
+                flex-direction: row;
+                color: #86d38c;
+                align-items: center;
+                font-size: 16px;
+                font-weight: 600;
+                margin-left: auto;
+
+                .Header_login-button {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    text-decoration: none;
+
+                    &:first-child {
+                        margin-right: 20px;
+                    }
+
+                    img {
+                        height: 24px;
+                        width: 24px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+
+            .Header_account {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-left: auto;
+
+                .Header_account-info {
+                    display: flex;
+                    flex-direction: column;
+                    text-align: right;
+                    margin-right: 10px;
+                    line-height: normal;
+                    position: relative;
+
+                    &.CopyButton {
+                        align-items: unset;
+                    }
+
+                    .federation {
+                        font-weight: normal;
+                        color: #505558;
+                        max-width: 200px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    .public-key {
+                        font-size: 12px;
+                        font-weight: normal;
+                        color: #505558;
+                        opacity: 0.3;
+                    }
+
+                    .CopyButton__popup {
+                        display: none;
+
+                        right: 0;
+                        left: unset;
+                        &::after {
+                            content: '';
+                            bottom: unset;
+                            top: -16px;
+                            left: unset;
+                            right: 10px;
+                            border: 8px solid transparent;
+                            border-bottom: 8px solid #7ed085;
+                        }
+
+                        &.federationPopup {
+                            display: block;
+                            top: 25px;
+                        }
+
+                        &.publicKeyPopup {
+                            display: block;
+                            top: 40px;
+                        }
+                    }
+                }
+
+                .Header_account-icon {
+                    height: 32px;
+                    width: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 50%;
+                    border: solid 2px #e1f4e2;
+                    margin-right: -9px;
+
+                    img {
+                        height: 14px;
+                        width: 14px;
+                    }
+                }
+
+                .Header_app-icon {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    border: solid 2px #E1F4E2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #fff;
+                    overflow: hidden;
+                    box-sizing: border-box;
+
+                    img {
+                        height: 34px;
+                        width: 34px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@mixin header_fullscreen {
+    position: fixed;
+    width: 100%;
+
+    .so-back {
+        padding-right: 0;
+        padding-left: 18px;
+    }
+
+    .so-chunk {
+        max-width: 100%;
+    }
+
+    .Header_background {
+        .Header {
+            .Header_nav {
+                .Nav_logo {
+                    margin-right: 16px;
+                }
+                .Nav_link {
+                    margin-right: 5px;
+                }
+            }
+            .Header_version {
+                display: none;
+            }
+        }
+    }
+}
+
+:-webkit-full-screen #stellarterm_header {
+    @include header_fullscreen;
+}
+
+:-moz-full-screen #stellarterm_header {
+    @include header_fullscreen;
+}
+
+:-ms-fullscreen #stellarterm_header {
+    @include header_fullscreen;
+}
+
+:fullscreen #stellarterm_header {
+    @include header_fullscreen;
+}

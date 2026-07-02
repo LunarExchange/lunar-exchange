@@ -1,0 +1,58 @@
+.LoginLink{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 17px;
+    padding-right: 14px;
+    height: 65px;
+    width: 272px;
+    cursor: pointer;
+    transition: all 0.15s ease-in;
+    text-decoration: none;
+    border: 1px solid #f2f2f2;
+    background-color: #fdfdfd;
+    box-sizing: border-box;
+    position: relative;
+
+    .narrow & {
+        width: 100%;
+    }
+
+    &:hover{
+        background-color: #fbfbfc;
+        padding-right: 9px;
+    }
+
+    .LoginLink_wrap {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .LoginLink_logo {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+
+            img {
+                height: 32px;
+                width: 32px;
+            }
+        }
+
+        .LoginLink_description {
+            font-size: 14px;
+            font-weight: normal;
+            color: #1c2e3e;
+            line-height: 13px;
+        }
+    }
+
+    .LoginLink_beta {
+        color: #1c2e3e;
+        opacity: 0.5;
+        font-size: 10px;
+        font-weight: normal;
+        font-style: italic;
+    }
+}

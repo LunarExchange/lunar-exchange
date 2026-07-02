@@ -1,0 +1,75 @@
+@import './CommonCss/solar-css/lib/index';
+@import './CommonCss/solar-stellarterm/lib/index';
+
+@import './CommonCss/solar-css/styles/index';
+@import './CommonCss/solar-stellarterm/styles/index';
+
+@import './CommonCss/row';
+@import './CommonCss/island';
+@import './CommonCss/lightenZeros';
+
+@import './Basics/Basics';
+@import './Common/Common';
+@import './Download/Download';
+@import './Header/Header';
+@import './Footer/Footer';
+@import './Session/Session';
+@import './Markets/Markets';
+@import './NotFound/NotFound';
+@import './HomePage/HomePage';
+@import './Exchange/Exchange';
+@import './TermsOfUse/TermsOfUse';
+@import './GlobalModal/GlobalModal';
+@import 'ToastTemplate/ToastTemplate';
+@import './DiscoWidget/WidgetIframe';
+@import 'AppLoading/AppLoading';
+@import 'Swap/Swap';
+
+html {
+    min-width: 1052px;
+    background: #fff;
+    overflow-x: hidden;
+
+    margin-right: calc(-1 * (100vw - 100%));
+}
+
+body {
+    background: linear-gradient(0deg, #ced0ff, #c0ecff);
+    color: $s-color-neutral3;
+    font-size: $s-scale-4;
+    min-width: 1052px;
+}
+
+#app {
+    position: relative;
+    min-height: 100vh;
+}
+
+.img--noSelect {
+    user-select: none;
+}
+
+.clickToSelect {
+    border-bottom: 1px dotted currentColor;
+    cursor: pointer;
+}
+
+ul.privacy__ul {
+    li {
+        list-style-position: inside;
+    }
+}
+
+.AppStretch {
+    min-height: 100vh;
+}
+
+.AppContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.WelcomeTitle {
+    margin-bottom: 12px;
+}

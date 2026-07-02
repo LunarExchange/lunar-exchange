@@ -1,0 +1,61 @@
+@import "TrustButton/TrustButton";
+
+.AssetRow {
+    padding: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .tradeLink {
+        border-bottom: 1px dotted $s-color-neutral5;
+        line-height: 24px;
+        height: 24px;
+        text-align: right;
+        margin: 0 auto;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .s-button {
+        min-width: 180px;
+    }
+}
+
+.AssetRowContainer{
+    display: flex;
+    flex-direction: column;
+    border: solid 1px #bdbfc032;
+    background-color: #f4f4f532;
+    margin: 0 20px 22px;
+    padding: 0 18px;
+
+    .AssetRow{
+        border-bottom: solid 1px #bdbfc032;
+
+        &:last-child{
+            border-bottom: none;
+        }
+    }
+}
+
+.AssetRow__exists {
+    color: $s-color-neutral5;
+}
+
+.AssetRow_flex3 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 18px;
+    border-top: solid 1px #dfe0e0;
+
+    .tradeLink {
+        line-height: 24px;
+        text-align: right;
+        width: 33%;
+        height: auto;
+        padding: 5px 5px;
+        cursor: pointer;
+        text-decoration: none;
+    }
+}

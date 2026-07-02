@@ -1,0 +1,111 @@
+.ActionBtns_container {
+    display: flex;
+    text-transform: uppercase;
+    justify-content: flex-end;
+
+    .actionBtn {
+        display: flex;
+        font-size: 16px;
+        font-weight: 600;
+        color: #86d38c;
+        padding: 0.5em;
+        cursor: pointer;
+
+        .actionBtn_icon {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .btnHint {
+        display: none;
+    }
+
+    .emptyIcon {
+        min-width: 40px;
+    }
+}
+
+.hide_ActionText {
+    .actionBtn {
+        position: relative;
+        justify-content: center;
+
+        &:hover {
+            .btnHint {
+                display: flex;
+            }
+
+
+        }
+
+        .btnHint_wide {
+            width: 130px;
+        }
+
+        .btnHint {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            top: 35px;
+            color: #fff;
+            padding: 0.3em 0.75em;
+            position: absolute;
+            font-weight: normal;
+            font-style: normal;
+            text-transform: capitalize;
+            transition: 0.25s ease-in-out;
+            border-radius: 4px;
+            background: rgba(2, 18, 67, 0.78);
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+            z-index: 100;
+
+            &::after {
+                content: "";
+                position: absolute;
+                left: calc(50% - 8px);
+                top: -16px;
+                border: 8px solid transparent;
+                border-bottom: 8px solid rgba(2, 18, 67, 0.78);
+            }
+
+            &.btnMenu {
+                flex-direction: column;
+                background: white;
+                z-index: 200;
+                justify-content: space-between;
+                align-items: flex-start;
+                padding: 0.3em 0;
+
+                .actionBtn {
+                    color: #505558;
+                    font-weight: 400;
+                    font-size: 14px;
+                    align-items: center;
+                    width: 100%;
+                    padding: 0.3em 1em;
+                    white-space: nowrap;
+                    justify-content: flex-start;
+
+                   .actionBtn_icon {
+                       margin-right: 10px;
+                   }
+
+
+                    &:hover {
+                        background-color: #eee;
+                    }
+                }
+
+
+                &::after {
+                    border-bottom: 8px solid white;
+                }
+            }
+        }
+    }
+}

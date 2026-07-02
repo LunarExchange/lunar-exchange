@@ -1,0 +1,108 @@
+import * as StellarSdk from '@stellar/stellar-sdk';
+import { isStellarUri, parseStellarUri } from '@stellarguard/stellar-uri';
+
+
+function checkReplaceFields(replacements, driver) {
+    // Checks of "replace fields"  are duplicated in the Sep7GetBuiltTX
+
+    // Supported:
+    // Transactions with 'sourceAccount' field in replace
+    // Without replace
+
+    if (replacements.length > 1) {
+        driver.modal.handlers.activate('Sep7ErrorModal',
+            'Transactions with multiple replacements are not currently supported');
+        return false;
+    }
+
+    if (replacements.length && replacements[0].path !== 'sourceAccount') {
+        driver.modal.handlers.activate('Sep7ErrorModal',
+            `Field: "${replacements[0].path}" in replacement is not currently supported`);
+        return false;
+    }
+
+    return true;
+}
+
+function processOperations(operations, driver, txDetails) {
+    // Supported:
+    // Payment transactions with amount (donate is not supported now)
+    // TX transactions (payment and changeTrust)
+
+    if (operations.length !== 1) {
+        driver.modal.handlers.activate('Sep7ErrorModal',
+            'Transactions with multiple operations are not supported yet');
+        return;
+    }
+    const { type } = operations[0];
+
+    if (type === 'payment') {
+        driver.modal.handlers.activate('Sep7PayModal', txDetails);
+        return;
+    }
+
+    if (type === 'changeTrust') {
+        driver.modal.handlers.activate('Sep7TChangeTrustModal', txDetails);
+        return;
+    }
+
+    driver.modal.handlers.activate('Sep7ErrorModal',
+        'This type of operation is not currently supported');
+}
+
+
+export default async function Sep7Handler(driver) {
+    // Supported browsers: Opera, Chrome, Firefox
+
+    if (!window.navigator || !window.navigator.registerProtocolHandler) {
+        console.warn('Your browser does not support the Stellar-protocol: SEP-0007. ' +
+            'Use Chrome, Opera or Firefox to open web+stellar links');
+    } else {
+        // Enable stellarUri in browser
+        window.navigator.registerProtocolHandler('web+stellar', `${window.location.origin}?tx=%s`, 'stellarUri');
+    }
+
+    // Check is StellarUri
+    const urlParsed = [...new window.URLSearchParams(window.location.search).entries()].reduce((sum, [key, val]) =>
+        Object.assign({ [key]: val }, sum), {}) || {};
+    if (!isStellarUri(urlParsed.tx)) {
+        return;
+    }
+    try {
+        const txDetails = parseStellarUri(urlParsed.tx);
+        const { operation } = txDetails;
+        const isVerified = await txDetails.verifySignature();
+        if (!isVerified) {
+            driver.modal.handlers.activate('Sep7ErrorModal',
+                'Security warning: signature of this transaction request is not valid!');
+            return;
+        }
+
+        const isPayOperation = operation === 'pay';
+        if (isPayOperation && !txDetails.amount) {
+            driver.modal.handlers.activate('Sep7ErrorModal',
+                'Payment operations without specified amount are not supported yet');
+            return;
+        }
+
+        if (isPayOperation) {
+            driver.modal.handlers.activate('Sep7PayModal', txDetails);
+            return;
+        }
+
+
+        const { xdr } = txDetails;
+        const replacements = txDetails.getReplacements();
+        const transaction = new StellarSdk.Transaction(xdr, driver.Server.networkPassphrase);
+
+        if (!checkReplaceFields(replacements, driver)) {
+            return;
+        }
+
+        const { operations } = transaction;
+        processOperations(operations, driver, txDetails);
+    } catch (e) {
+        driver.modal.handlers.activate('Sep7ErrorModal',
+            'Error: Could not parse transaction request URI!');
+    }
+}

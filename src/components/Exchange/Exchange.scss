@@ -1,0 +1,244 @@
+@import "./OfferTables/OfferTables";
+@import "./ManageOffers/ManageOffers";
+@import "./OfferMakers/OfferMakers";
+@import "./LightweightChart/LightweightChart";
+@import "./ChartActionAlert/ChartActionAlert";
+@import "./PairPicker/PairPicker";
+@import "./MarketsHistory/MarketsHistory";
+@import "./DepthChart/DepthChart";
+
+.hidden-pair {
+    display: none;
+}
+
+.Exchange__warning {
+    padding: 18px 18px 0 18px;
+}
+
+.Exchange_orderbook {
+    padding-bottom: 18px;
+}
+
+.Exchange__orderbookDisabled {
+    font-size: $s-scale-1;
+    text-align: center;
+    margin-bottom: $s-scale-2;
+}
+
+.Orderbook {
+    padding: 0;
+}
+
+.tabs_Switcher {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px 0 0;
+
+    .ListHeader_lowTradable {
+        height: 20px;
+    }
+
+    .switch_Tabs,
+    .fullscreen_Block {
+        display: flex;
+        align-items: center;
+    }
+
+    .switch_Tabs {
+        a {
+            display: flex;
+            text-decoration: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+
+            img {
+                opacity: 0.7;
+                margin-right: 5px;
+                width: 24px;
+                height: 24px;
+            }
+        }
+        .active_Tab {
+            border-bottom: solid 2px #86d38c;
+
+            img {
+                opacity: 1;
+            }
+        }
+    }
+
+    .ListHeader_zoom {
+        display: flex;
+        font-size: 14px;
+        color: #9aa6ac;
+
+        span {
+            margin-right: 16px;
+        }
+
+        button {
+            width: 24px;
+            height: 24px;
+            margin-left: 4px;
+            background-color: #fff;
+            border: 1px solid transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+
+            &:active {
+                border: 1px solid #86d38c;
+            }
+
+            &:disabled {
+                pointer-events: none;
+                img {
+                    opacity: 0.3;
+                }
+            }
+        }
+    }
+
+    .fullscreen_Block {
+        .actionBtn {
+            display: flex;
+            position: relative;
+            margin-right: 1em;
+
+            &:last-child {
+                margin-right: 0;
+            }
+
+            &:hover {
+                .btnHint {
+                    display: block;
+                }
+
+                img {
+                    transform: scale(1.15);
+                }
+            }
+        }
+
+        .screenshot-btn {
+            height: 23px;
+            width: auto;
+        }
+
+        img {
+            width: 23px;
+            height: 23px;
+            transition: 0.25s ease-in-out;
+            cursor: pointer;
+
+            &:hover {
+                transform: scale(1.15);
+            }
+        }
+
+        .btnHint {
+            .keySpan {
+                border-radius: 2px;
+                border: solid 1px #ffffff;
+                padding: 2px 0.5em;
+            }
+
+            display: none;
+            width: max-content;
+            right: -10px;
+            top: 35px;
+            z-index: 11;
+            color: #fff;
+            padding: 0.3em 0.75em;
+            font-size: 16px;
+            position: absolute;
+            transition: 0.25s ease-in-out;
+            border-radius: 4px;
+            background: rgba(2, 18, 67, 0.78);
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
+
+            &::after {
+                content: "";
+                position: absolute;
+                right: 13px;
+                top: -16px;
+                border: 8px solid transparent;
+                border-bottom: 8px solid rgba(2, 18, 67, 0.78);
+            }
+        }
+    }
+
+    .fullscreen_iconLeft {
+        position: fixed;
+        left: 0;
+        top: 72px;
+        z-index: 10;
+    }
+
+    .switch_Tabs a,
+    .fullscreen_Block {
+        padding: 11px 18px 9px 18px;
+
+        &:first-child {
+            margin-left: 1em;
+        }
+    }
+}
+
+//Charts styles
+.ChartChunk {
+    margin: 0 auto;
+    height: 500px;
+    border-radius: 3px;
+    position: relative;
+
+    .chart_message {
+        width: 100%;
+        font-size: $s-scale-2;
+        margin-bottom: 0;
+        padding-left: 18px;
+        padding-right: 18px;
+        text-align: center;
+        color: $s-color-neutral6;
+    }
+}
+
+.fullScreenChart {
+    position: relative;
+    margin-bottom: 2em;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+
+    .ChartChunk {
+        width: 100%;
+        height: calc(100vh - 72px);
+        position: relative;
+        z-index: 5;
+        top: 72px;
+        left: 0;
+
+        #LightChart {
+            width: calc(100% - 9px);
+            height: 100%;
+        }
+    }
+}
+
+.fullscreen_Loading {
+    display: flex;
+    font-size: 21px;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    color: #bdbfc0;
+    width: 100vw;
+    height: calc(100vh + 72px);
+}
+
+:-ms-fullscreen #ChartChunk {
+    width: 100vw !important;
+}
