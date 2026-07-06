@@ -98,6 +98,25 @@ jest.mock('./Common/ErrorBoundary/ErrorBoundary', () => ({
 // Mock the Driver class
 jest.mock('../lib/driver/Driver');
 
+// Mock @stellar-broker/client
+jest.mock('@stellar-broker/client', () => ({
+    Mediator: {
+        hasObsoleteMediators: jest.fn(() => false),
+    },
+}));
+
+// Mock browser support helpers
+jest.mock('../lib/helpers/BrowserSupport', () => ({
+    isIE: jest.fn(() => false),
+    isEdge: jest.fn(() => false),
+}));
+
+// Mock is-electron
+jest.mock('is-electron', () => jest.fn(() => false));
+
+// Mock favicon utils
+jest.mock('../lib/helpers/faviconUtils', () => jest.fn());
+
 describe('LunarExchangeApp', () => {
     let mockDriver;
     let unsubscribeSession;
