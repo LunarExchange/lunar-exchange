@@ -53,15 +53,10 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Generate lockfile if missing
+      - name: Clean install dependencies
         run: |
-          if [ ! -f "package-lock.json" ]; then
-            echo "📦 Generating package-lock.json..."
-            npm install --package-lock-only
-          fi
-
-      - name: Install dependencies
-        run: npm ci || npm install
+          rm -rf node_modules package-lock.json
+          npm install
         env:
           HUSKY: 0
 
@@ -108,15 +103,10 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Generate lockfile if missing
+      - name: Clean install dependencies
         run: |
-          if [ ! -f "package-lock.json" ]; then
-            echo "📦 Generating package-lock.json..."
-            npm install --package-lock-only
-          fi
-
-      - name: Install dependencies
-        run: npm ci || npm install
+          rm -rf node_modules package-lock.json
+          npm install
         env:
           HUSKY: 0
 
@@ -153,15 +143,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Generate lockfile if missing
+      - name: Clean install dependencies
         run: |
-          if [ ! -f "package-lock.json" ]; then
-            echo "📦 Generating package-lock.json..."
-            npm install --package-lock-only
-          fi
-
-      - name: Install dependencies
-        run: npm ci || npm install
+          rm -rf node_modules package-lock.json
+          npm install
         env:
           HUSKY: 0
 
@@ -193,15 +178,10 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Generate lockfile if missing
+      - name: Clean install dependencies
         run: |
-          if [ ! -f "package-lock.json" ]; then
-            echo "📦 Generating package-lock.json..."
-            npm install --package-lock-only
-          fi
-
-      - name: Install dependencies
-        run: npm ci || npm install
+          rm -rf node_modules package-lock.json
+          npm install
         env:
           HUSKY: 0
 
