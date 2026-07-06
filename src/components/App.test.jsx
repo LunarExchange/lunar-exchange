@@ -117,6 +117,28 @@ jest.mock('is-electron', () => jest.fn(() => false));
 // Mock favicon utils
 jest.mock('../lib/helpers/faviconUtils', () => jest.fn());
 
+// Mock stellar-identicon-js
+jest.mock('stellar-identicon-js', () => jest.fn(() => ({
+    toDataURL: jest.fn(() => 'data:image/png;base64,mock'),
+})));
+
+// Mock react-router-dom
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    BrowserRouter: ({ children }) => <div>{children}</div>,
+    Switch: ({ children }) => <div>{children}</div>,
+    Route: ({ render, component: Component }) => {
+        if (render) {
+            return render({});
+        }
+        if (Component) {
+            return <Component />;
+        }
+        return null;
+    },
+    Redirect: () => null,
+}));
+
 describe('LunarExchangeApp', () => {
     let mockDriver;
     let unsubscribeSession;
@@ -125,6 +147,30 @@ describe('LunarExchangeApp', () => {
     beforeEach(() => {
         // Reset mocks
         jest.clearAllMocks();
+        
+        // Mock window.location
+        delete window.location;
+        window.location = {
+            pathname: '/',
+            hash: '',
+            href: 'http://localhost/',
+            origin: 'http://localhost',
+            reload: jest.fn(),
+        };
+        
+        // Mock window.addEventListener
+        window.addEventListener = jest.fn();
+        
+        // Mock window.onbeforeunload
+        delete window.onbeforeunload;
+        window.onbeforeunload = null;
+        
+        // Mock URL constructor
+        global.URL = jest.fn().mockImplementation((url, base) => ({
+            href: url,
+            hash: '',
+            pathname: '/',
+        }));
         
         // Create unsubscribe functions
         unsubscribeSession = jest.fn();
