@@ -38,6 +38,7 @@
     "test:ci": "jest --ci --coverage --maxWorkers=2",
     "lint": "eslint . --ext .js,.jsx --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.jsx --fix",
+    "fix-eslint": "node scripts/fix-eslint.js",
     "format": "prettier --write \"**/*.{js,jsx,json,md,css,scss}\"",
     "format:check": "prettier --check \"**/*.{js,jsx,json,md,css,scss}\"",
     "type-check": "tsc --noEmit",

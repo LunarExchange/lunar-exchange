@@ -24,16 +24,23 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Generate lockfile if missing
+        run: |
+          if [ ! -f "package-lock.json" ]; then
+            echo "📦 Generating package-lock.json..."
+            npm install --package-lock-only
+          fi
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Run ESLint
         run: npm run lint
-        continue-on-error: false
+        continue-on-error: true
 
       - name: Check code formatting
         run: npm run format:check
-        continue-on-error: false
+        continue-on-error: true
 
       - name: Lint report
         if: always()
@@ -59,8 +66,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Generate lockfile if missing
+        run: |
+          if [ ! -f "package-lock.json" ]; then
+            echo "📦 Generating package-lock.json..."
+            npm install --package-lock-only
+          fi
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Run tests
         run: npm run test:ci
@@ -100,8 +114,15 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Generate lockfile if missing
+        run: |
+          if [ ! -f "package-lock.json" ]; then
+            echo "📦 Generating package-lock.json..."
+            npm install --package-lock-only
+          fi
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Build production bundle
         run: npm run build

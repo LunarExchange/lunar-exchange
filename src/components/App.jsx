@@ -1,6 +1,4 @@
-import url from 'url';
 import React, { lazy, Suspense } from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Mediator } from '@stellar-broker/client';
 import PropTypes from 'prop-types';
@@ -32,22 +30,10 @@ const PrivacyPolicyPage = lazy(() => import('./PrivacyPolicy/PrivacyPolicy'));
 const TestNetworkPage = lazy(() => import('./TestNetwork/TestNetwork'));
 const ReloadToTestnetPage = lazy(() => import('./ReloadToTestnet/ReloadToTestnet'));
 
-window.React = React;
-const mountNode = document.getElementById('app');
-
-if (!window.location.pathname.includes('index.html') && window.location.hash.indexOf('#') === 0) {
-    window.location.replace(
-        window.location.pathname +
-            (window.location.pathname[window.location.pathname.length - 1] === '/' ? '' : '/') +
-            window.location.hash.substr(1),
-    );
-}
-
-const driver = new Driver();
-
-const parseUrl = href => {
-    const hash = url.parse(href).hash;
-    return hash === null ? '' : hash.substr(1);
+const parseUrl = (href) => {
+    const urlObj = new URL(href, window.location.origin);
+    const { hash } = urlObj;
+    return hash === '' ? '' : hash.substr(1);
 };
 
 class TermApp extends React.Component {
@@ -88,7 +74,7 @@ class TermApp extends React.Component {
 
         window.addEventListener(
             'hashchange',
-            e => {
+            (e) => {
                 if (e.newURL.includes('testnet')) {
                     window.location.reload();
                 }
@@ -122,7 +108,7 @@ class TermApp extends React.Component {
 
         // Alert for logged user before reload page
         if (!isElectron()) {
-            window.onbeforeunload = e => {
+            window.onbeforeunload = (e) => {
                 const { state } = this.props.d.session;
                 if (state === SESSION_STATE.IN || state === SESSION_STATE.UNFUNDED) {
                     e.returnValue = 'You will be logged out after reload!';
@@ -167,7 +153,7 @@ class TermApp extends React.Component {
                                             <Route
                                                 exact
                                                 path="/"
-                                                render={props => <HomePage {...props} driver={d} />}
+                                                render={(props) => <HomePage {...props} driver={d} />}
                                             />
                                             <Route path="/download/" component={DownloadPage} />
                                             <Route
@@ -178,55 +164,55 @@ class TermApp extends React.Component {
                                             <Route path="/terms-of-use/" component={TermsOfUsePage} />
                                             <Route
                                                 path="/account/"
-                                                render={props => <SessionPage {...props} d={d} urlParts={'account'} />}
+                                                render={(props) => <SessionPage {...props} d={d} urlParts="account" />}
                                             />
                                             <Route
                                                 path="/ledger/"
-                                                render={props => <SessionPage {...props} d={d} urlParts={'ledger'} />}
+                                                render={(props) => <SessionPage {...props} d={d} urlParts="ledger" />}
                                             />
                                             <Route
                                                 path="/trezor/"
-                                                render={props => (
-                                                    <SessionPage {...props} d={this.props.d} urlParts={'trezor'} />
+                                                render={(props) => (
+                                                    <SessionPage {...props} d={this.props.d} urlParts="trezor" />
                                                 )}
                                             />
                                             <Route
                                                 path="/freighter/"
-                                                render={props => (
-                                                    <SessionPage {...props} d={this.props.d} urlParts={'freighter'} />
+                                                render={(props) => (
+                                                    <SessionPage {...props} d={this.props.d} urlParts="freighter" />
                                                 )}
                                             />
                                             <Route
                                                 path="/wallet-connect/"
-                                                render={props => (
+                                                render={(props) => (
                                                     <SessionPage
                                                         {...props}
                                                         d={this.props.d}
-                                                        urlParts={'wallet-connect'}
+                                                        urlParts="wallet-connect"
                                                     />
                                                 )}
                                             />
                                             <Route
                                                 path="/lobstr/"
-                                                render={props => (
-                                                    <SessionPage {...props} d={this.props.d} urlParts={'lobstr'} />
+                                                render={(props) => (
+                                                    <SessionPage {...props} d={this.props.d} urlParts="lobstr" />
                                                 )}
                                             />
                                             <Route
                                                 path="/signup/"
-                                                render={props => <SessionPage {...props} d={d} urlParts={'signup'} />}
+                                                render={(props) => <SessionPage {...props} d={d} urlParts="signup" />}
                                             />
-                                            <Route path="/markets" render={props => <MarketsPage {...props} d={d} />} />
+                                            <Route path="/markets" render={(props) => <MarketsPage {...props} d={d} />} />
                                             <Route
                                                 path="/exchange"
-                                                render={props => <ExchangePage {...props} d={d} />}
+                                                render={(props) => <ExchangePage {...props} d={d} />}
                                             />
 
                                             <Route
                                                 path="/buy-crypto"
-                                                render={props => <WidgetPage {...props} d={d} />}
+                                                render={(props) => <WidgetPage {...props} d={d} />}
                                             />
-                                            <Route path="/swap" render={props => <SwapPage {...props} d={d} />} />
+                                            <Route path="/swap" render={(props) => <SwapPage {...props} d={d} />} />
 
                                             <Route component={NotFoundPage} />
                                         </Switch>
@@ -249,4 +235,6 @@ TermApp.propTypes = {
     d: PropTypes.instanceOf(Driver).isRequired,
 };
 
-ReactDOM.render(<TermApp d={driver} />, mountNode);
+// Export as default and also as named export for compatibility
+export { TermApp as LunarExchangeApp };
+export default TermApp;

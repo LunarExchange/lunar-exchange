@@ -53,8 +53,15 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Generate lockfile if missing
+        run: |
+          if [ ! -f "package-lock.json" ]; then
+            echo "📦 Generating package-lock.json..."
+            npm install --package-lock-only
+          fi
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Run linting
         id: lint
@@ -99,6 +106,13 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Generate lockfile if missing
+        run: |
+          if [ ! -f "package-lock.json" ]; then
+            echo "📦 Generating package-lock.json..."
+            npm install --package-lock-only
+          fi
+
       - name: Run npm audit
         run: |
           npm audit --audit-level=high || echo "⚠️ Vulnerabilities found (non-blocking)"
@@ -132,8 +146,15 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Generate lockfile if missing
+        run: |
+          if [ ! -f "package-lock.json" ]; then
+            echo "📦 Generating package-lock.json..."
+            npm install --package-lock-only
+          fi
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Build project
         run: npm run build
@@ -163,8 +184,15 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Generate lockfile if missing
+        run: |
+          if [ ! -f "package-lock.json" ]; then
+            echo "📦 Generating package-lock.json..."
+            npm install --package-lock-only
+          fi
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci || npm install
 
       - name: Verify Stellar SDK
         run: |

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import LunarExchangeApp from './components/App';
+import TermApp from './components/App';
 import Driver from './lib/driver/Driver';
 import './styles/index.scss';
 
@@ -25,7 +25,7 @@ const root = createRoot(rootElement);
 
 root.render(
     <React.StrictMode>
-        <LunarExchangeApp driver={driver} />
+        <TermApp driver={driver} />
     </React.StrictMode>
 );
 
