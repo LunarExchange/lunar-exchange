@@ -100,22 +100,28 @@ jest.mock('../lib/driver/Driver');
 
 describe('LunarExchangeApp', () => {
     let mockDriver;
+    let unsubscribeSession;
+    let unsubscribeTicker;
 
     beforeEach(() => {
+        // Create unsubscribe functions
+        unsubscribeSession = jest.fn();
+        unsubscribeTicker = jest.fn();
+
         // Create a mock driver instance
         mockDriver = {
             session: {
                 event: {
-                    sub: jest.fn(() => jest.fn()),
+                    sub: jest.fn(() => unsubscribeSession),
                 },
                 state: 'OUT',
             },
             ticker: {
                 event: {
                     sub: jest.fn((callback) => {
-                        // Simulate ticker loaded
-                        setTimeout(() => callback(), 100);
-                        return jest.fn();
+                        // Call callback immediately for faster tests
+                        setImmediate(() => callback());
+                        return unsubscribeTicker;
                     }),
                 },
             },
@@ -163,9 +169,10 @@ describe('LunarExchangeApp', () => {
     test('renders home page after ticker loads', async () => {
         render(<LunarExchangeApp d={mockDriver} />);
         
+        // Wait for ticker to load and component to update
         await waitFor(() => {
             expect(screen.getByText('Home Page')).toBeInTheDocument();
-        });
+        }, { timeout: 3000 });
     });
 
     test('subscribes to session and ticker events', () => {
@@ -178,6 +185,11 @@ describe('LunarExchangeApp', () => {
     test('handles online event correctly', async () => {
         render(<LunarExchangeApp d={mockDriver} />);
         
+        // Wait a bit for component to fully mount
+        await waitFor(() => {
+            expect(mockDriver.ticker.event.sub).toHaveBeenCalled();
+        });
+
         // Simulate online event
         const onlineEvent = new Event('online');
         window.dispatchEvent(onlineEvent);
@@ -194,6 +206,11 @@ describe('LunarExchangeApp', () => {
     test('handles offline event correctly', async () => {
         render(<LunarExchangeApp d={mockDriver} />);
         
+        // Wait a bit for component to fully mount
+        await waitFor(() => {
+            expect(mockDriver.ticker.event.sub).toHaveBeenCalled();
+        });
+
         // Simulate offline event
         const offlineEvent = new Event('offline');
         window.dispatchEvent(offlineEvent);
@@ -217,16 +234,16 @@ describe('LunarExchangeApp', () => {
     test('cleans up event listeners on unmount', () => {
         const { unmount } = render(<LunarExchangeApp d={mockDriver} />);
         
-        const unsubscribeSession = jest.fn();
-        const unsubscribeTicker = jest.fn();
-        
-        mockDriver.session.event.sub.mockReturnValue(unsubscribeSession);
-        mockDriver.ticker.event.sub.mockReturnValue(unsubscribeTicker);
-        
-        unmount();
-        
-        // Verify cleanup
+        // Component should have subscribed
         expect(mockDriver.session.event.sub).toHaveBeenCalled();
         expect(mockDriver.ticker.event.sub).toHaveBeenCalled();
+        
+        // Unmount the component
+        unmount();
+        
+        // Verify unsubscribe functions were called
+        expect(unsubscribeSession).toHaveBeenCalled();
+        expect(unsubscribeTicker).toHaveBeenCalled();
     });
 });
+
