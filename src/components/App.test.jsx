@@ -148,20 +148,20 @@ describe('LunarExchangeApp', () => {
     });
 
     test('renders loading state initially', () => {
-        render(<LunarExchangeApp driver={mockDriver} />);
+        render(<LunarExchangeApp d={mockDriver} />);
         
-        expect(screen.getByText(/Loading assets and balances.../i)).toBeInTheDocument();
+        expect(screen.getByText(/Loading assets and balances/i)).toBeInTheDocument();
     });
 
     test('renders header and footer', () => {
-        render(<LunarExchangeApp driver={mockDriver} />);
+        render(<LunarExchangeApp d={mockDriver} />);
         
         expect(screen.getByText('Header')).toBeInTheDocument();
         expect(screen.getByText('Footer')).toBeInTheDocument();
     });
 
     test('renders home page after ticker loads', async () => {
-        render(<LunarExchangeApp driver={mockDriver} />);
+        render(<LunarExchangeApp d={mockDriver} />);
         
         await waitFor(() => {
             expect(screen.getByText('Home Page')).toBeInTheDocument();
@@ -169,14 +169,14 @@ describe('LunarExchangeApp', () => {
     });
 
     test('subscribes to session and ticker events', () => {
-        render(<LunarExchangeApp driver={mockDriver} />);
+        render(<LunarExchangeApp d={mockDriver} />);
         
         expect(mockDriver.session.event.sub).toHaveBeenCalled();
         expect(mockDriver.ticker.event.sub).toHaveBeenCalled();
     });
 
     test('handles online event correctly', async () => {
-        render(<LunarExchangeApp driver={mockDriver} />);
+        render(<LunarExchangeApp d={mockDriver} />);
         
         // Simulate online event
         const onlineEvent = new Event('online');
@@ -192,7 +192,7 @@ describe('LunarExchangeApp', () => {
     });
 
     test('handles offline event correctly', async () => {
-        render(<LunarExchangeApp driver={mockDriver} />);
+        render(<LunarExchangeApp d={mockDriver} />);
         
         // Simulate offline event
         const offlineEvent = new Event('offline');
@@ -208,14 +208,14 @@ describe('LunarExchangeApp', () => {
     });
 
     test('renders global modal and toast template', () => {
-        render(<LunarExchangeApp driver={mockDriver} />);
+        render(<LunarExchangeApp d={mockDriver} />);
         
         expect(screen.getByText('Global Modal')).toBeInTheDocument();
         expect(screen.getByText('Toast Template')).toBeInTheDocument();
     });
 
     test('cleans up event listeners on unmount', () => {
-        const { unmount } = render(<LunarExchangeApp driver={mockDriver} />);
+        const { unmount } = render(<LunarExchangeApp d={mockDriver} />);
         
         const unsubscribeSession = jest.fn();
         const unsubscribeTicker = jest.fn();
