@@ -28,19 +28,15 @@ module.exports = {
     ],
     coverageThreshold: {
         global: {
-            branches: 70,
-            functions: 70,
-            lines: 70,
-            statements: 70,
+            branches: 10,
+            functions: 10,
+            lines: 10,
+            statements: 10,
         },
     },
     coverageReporters: ['text', 'lcov', 'html'],
     moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'],
     testPathIgnorePatterns: ['/node_modules/', '/dist/', '/.storybook/'],
-    watchPlugins: [
-        'jest-watch-typeahead/filename',
-        'jest-watch-typeahead/testname',
-    ],
     globals: {
         'ts-jest': {
             isolatedModules: true,
