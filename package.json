@@ -45,7 +45,7 @@
     "clean": "rimraf dist/*",
     "hash": "cd dist && openssl dgst -sha256 index.html",
     "validate": "npm run lint && npm run format:check && npm run test",
-    "prepare": "husky install",
+    "prepare": "husky install || true",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
